@@ -61,9 +61,9 @@ resource "helm_release" "argo_cd_apps" {
           namespace  = "argocd"
           project    = "default"
           source     = {
-            repoURL        = var.git_repository
-            targetRevision = var.environment == "prod" ? "infra-argocd-prod" : "main"
-            path           = "deployment/infra/infra-chart"
+            repoURL        = "https://github.com/CyrineG/keycloak-tf-provider-migration-test.git"
+            targetRevision = "main"
+            path           = "clusters/kind-local/argocd-applications"
           }
           destination = {
             server    = "https://kubernetes.default.svc"
