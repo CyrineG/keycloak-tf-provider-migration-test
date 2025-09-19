@@ -29,7 +29,7 @@ provider "helm" {
 
 
 locals {
-  argo_cd_config = yamldecode(file("./../clusters/kind-local/argocd-applications/argocd.yaml"))
+  argo_cd_config = yamldecode(file("./../clusters/kind-local/argocd-applications/templates/argocd.yaml"))
   argo_cd_chart_version = local.argo_cd_config.spec.source.targetRevision
   argo_cd_values = yamlencode(local.argo_cd_config.spec.source.helm.valuesObject)
 }
