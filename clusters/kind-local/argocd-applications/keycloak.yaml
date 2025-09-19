@@ -1,0 +1,72 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keycloak
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: registry-1.docker.io
+    targetRevision: 24.8.1
+    helm:
+      valuesObject:
+        #terraform will create the secrets files
+        auth:
+          adminUser: admin
+          adminPassword: "adminpassword"
+        http:
+          relativePath: /
+        image:
+          registry: docker.io
+          repository: keycloak/keycloak
+          tag: 26.3.3
+        ingress:
+          enabled: true
+          ingressClassName: nginx
+          hostname: auth.local.dev
+          tls: false
+        replicaCount: 1
+        logging:
+          output: default
+          pdb:
+            create: true
+            minAvailable: 1
+          postgresql:
+            enabled: false
+          production: true
+          proxy: edge
+          replicaCount: 3
+          resources:
+            limits:
+              cpu: 400m
+              memory: 1140Mi
+            requests:
+              cpu: 20m
+              memory: 570Mi
+          revisionHistoryLimitCount: 0
+          spi:
+            hostnameVerificationPolicy: STRICT
+          topologySpreadConstraints:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: keycloak
+              maxSkew: 1
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: ScheduleAnyway
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: keycloak
+              maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: ScheduleAnyway
+          chart: bitnamicharts/keycloak
+
+destination:
+  server: https://kubernetes.default.svc
+  namespace: keycloak
+syncPolicy:
+  syncOptions:
+  - CreateNamespace=true
+  automated:
+    prune: true
+    selfHeal: true

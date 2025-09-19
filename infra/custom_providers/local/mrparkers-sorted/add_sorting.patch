@@ -1,0 +1,20 @@
+diff --git a/provider/resource_keycloak_user.go b/provider/resource_keycloak_user.go
+index da04cd2..76e9619 100644
+--- a/provider/resource_keycloak_user.go
++++ b/provider/resource_keycloak_user.go
+@@ -4,6 +4,7 @@ import (
+ 	"context"
+ 	"errors"
+ 	"fmt"
++	"sort"
+ 	"strings"
+ 
+ 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+@@ -184,6 +185,7 @@ func mapFromUserToData(data *schema.ResourceData, user *keycloak.User) {
+ 	}
+ 	attributes := map[string]string{}
+ 	for k, v := range user.Attributes {
++		sort.Strings(v)
+ 		attributes[k] = strings.Join(v, MULTIVALUE_ATTRIBUTE_SEPARATOR)
+ 	}
+ 	data.SetId(user.Id)
