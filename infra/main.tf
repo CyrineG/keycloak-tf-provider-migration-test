@@ -63,12 +63,7 @@ resource "helm_release" "argo_cd_apps" {
           source     = {
             repoURL        = "https://github.com/CyrineG/keycloak-tf-provider-migration-test.git"
             targetRevision = "main"
-            path           = "clusters/kind-local/argocd-applications"
-            directory = {
-              recurse = true
-              exclude = "**/.terraform/**"  # Exclude terraform directories
-              include = "**/*.yaml,**/*.yml,charts/**"  # Only include specific files
-            }
+            path           = "clusters/kind-local/argocd-applications/templates"
           }
           destination = {
             server    = "https://kubernetes.default.svc"
