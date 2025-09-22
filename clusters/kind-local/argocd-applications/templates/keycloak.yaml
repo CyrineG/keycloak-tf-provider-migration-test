@@ -25,7 +25,18 @@ spec:
           repository: bitnami/keycloak
           tag: 26.3.2-debian-12-r0
         ingress:
-          enabled: false
+          enabled: true
+          ingressClassName: nginx
+          hostname: auth.local.dev
+          tls: false
+          # Configure proxy settings for ingress
+        extraEnvVars:
+          - name: KC_PROXY
+            value: edge
+          - name: KC_HOSTNAME
+            value: auth.local.dev
+          - name: KC_HOSTNAME_PORT
+            value: "8080"
         replicaCount: 1
         logging:
           output: default
