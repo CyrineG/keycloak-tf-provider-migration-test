@@ -11,6 +11,9 @@ spec:
     targetRevision: 24.8.1
     helm:
       valuesObject:
+        global:
+          security:
+            allowInsecureImages: true
         #terraform will create the secrets files
         auth:
           adminUser: admin
