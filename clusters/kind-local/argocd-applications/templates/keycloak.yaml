@@ -6,6 +6,7 @@ metadata:
 spec:
   project: default
   source:
+    chart: bitnamicharts/keycloak
     repoURL: registry-1.docker.io
     targetRevision: 24.8.1
     helm:
