@@ -76,10 +76,10 @@ spec:
             hostname: argocd.local.dev
             tls: false
           replicas: 1
-        destination:
-          server: https://kubernetes.default.svc
-          namespace: argocd
-        syncPolicy:
-          automated:
-            selfHeal: true
-            prune: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

@@ -61,12 +61,12 @@ spec:
               whenUnsatisfiable: ScheduleAnyway
           chart: bitnamicharts/keycloak
 
-        destination:
-          server: https://kubernetes.default.svc
-          namespace: keycloak
-        syncPolicy:
-          syncOptions:
-            - CreateNamespace=true
-          automated:
-            prune: true
-            selfHeal: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: keycloak
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
