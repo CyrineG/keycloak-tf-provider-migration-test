@@ -1,0 +1,5 @@
+# .gitignore - Add these lines if not already present
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
