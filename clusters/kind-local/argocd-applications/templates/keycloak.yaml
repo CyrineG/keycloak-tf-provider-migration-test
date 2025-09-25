@@ -28,10 +28,7 @@ spec:
           repository: bitnami/keycloak
           tag: 26.3.2-debian-12-r0
         ingress:
-          enabled: true
-          ingressClassName: nginx
-          hostname: auth.local.dev
-          tls: false
+          enabled: false
 
         extraEnvVars:
           - name: KC_PROXY
