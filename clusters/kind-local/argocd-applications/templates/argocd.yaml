@@ -15,23 +15,23 @@ spec:
       valuesObject:
         applicationSet:
           enabled: false
+
         configs:
           secret:
             # Create a simple bcrypt hashed password: "adminpassword"
             # Use: `htpasswd -nbBC 10 "" adminpassword | tr -d ':\n' | sed 's/$2y/$2a/'`
             argocdServerAdminPassword: "$2a$10$kTE6ZuwwbINBMwk1T4auHeidDyyrqZiC37dV1Bl3SQMAOCEAtdWla"
           cm:
-            # for the oidc config i should probably wait till i first create argocd, then run tf script to populate the clients of it, then i can uncomment the oidc config, right?
-            # CORRECT. Commented out for Phase 1.
-            # oidc.config: |
-            #   name: Keycloak
-            #   clientID: argocd
-            #   clientSecret: "$oidc-keycloak-client-secret" # This will come from a K8s Secret
-            #   issuer: "http://keycloak.keycloak.svc.cluster.local:8080/realms/argocd"
-            #   requestedScopes:
-            #   - "openid"
-            #   - "profile"
-            #   - "email"
+            # for the oidc config i  wait till i first create argocd, then run tf script to populate the clients of it, then i can uncomment the oidc config
+            oidc.config: |
+              "name": "Keycloak"
+              "clientID": "{{ .Values.keycloak.dev_realm.clients.argocd.clientId }}"
+              "clientSecret": "{{ .Values.keycloak.dev_realm.clients.argocd.clientSecret }}"
+              "issuer": "{{ .Values.keycloakDevRealmUrl }}"
+              "requestedScopes":
+              - "openid"
+              - "profile"
+              - "email"
             resource.exclusions: |
               - apiGroups:
                   - cilium.io
@@ -39,7 +39,7 @@ spec:
                   - CiliumIdentity
                 clusters:
                   - "*"
-            url: https://argocd.local.dev
+            url: "http://argocd.local.dev:30000"
           params:
             server.insecure: true
           rbac:
@@ -55,6 +55,10 @@ spec:
         dex:
           enabled: false
         global:
+          hostAliases:
+            - ip: 10.96.130.253    # Keycloak service ClusterIP
+              hostnames:
+                - "auth.local.dev"
           # Removed imagePullSecrets, topologySpreadConstraints, and other complex settings for local simplicity
           revisionHistoryLimit: 2
         notifications:
@@ -71,10 +75,7 @@ spec:
           replicas: 1
         server:
           ingress:
-            enabled: true
-            ingressClassName: nginx
-            hostname: argocd.local.dev
-            tls: false
+            enabled: false
           replicas: 1
   destination:
     server: https://kubernetes.default.svc
