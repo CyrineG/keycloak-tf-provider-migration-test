@@ -14,7 +14,7 @@ spec:
         global:
           service:
             ports:
-              http: 8080
+              http: 8082
           security:
             allowInsecureImages: true
         #terraform will create the secrets files
@@ -36,7 +36,7 @@ spec:
           - name: KC_HOSTNAME
             value: auth.local.dev
           - name: KC_HOSTNAME_PORT # needed so Keycloak generates correct external URLs when behind an ingress proxy, else it will forward to https and strip port from url
-            value: "8080"
+            value: "8082"
         replicaCount: 1
         logging:
           output: default
