@@ -28,6 +28,10 @@ spec:
           enabled: false
 
         extraEnvVars:
+          - name: KC_DB
+            value: mssql
+          - name: KC_DB_URL
+            value: "jdbc:sqlserver://host.rancher-desktop.internal:1433;databaseName=bitnami_keycloak;encrypt=false;trustServerCertificate=true;"
           - name: KC_PROXY
             value: edge
           - name: KC_HOSTNAME
@@ -35,40 +39,44 @@ spec:
           - name: KC_HOSTNAME_PORT # needed so Keycloak generates correct external URLs when behind an ingress proxy, else it will forward to https and strip port from url
             value: "80"
         replicaCount: 1
+        externalDatabase:
+          database: bitnami_keycloak
+          host: host.rancher-desktop.internal
+          password: YourStrong@Password123
+          port: 1433
+          user: sa
         logging:
           output: default
           pdb:
             create: true
             minAvailable: 1
-          postgresql:
-            enabled: true
-          production: true
-          httpEnabled: true
-          replicaCount: 3
-          resources:
-            limits:
-              cpu: 400m
-              memory: 1140Mi
-            requests:
-              cpu: 20m
-              memory: 570Mi
-          revisionHistoryLimitCount: 0
-          spi:
-            hostnameVerificationPolicy: STRICT
-          topologySpreadConstraints:
-            - labelSelector:
-                matchLabels:
-                  app.kubernetes.io/component: keycloak
-              maxSkew: 1
-              topologyKey: topology.kubernetes.io/zone
-              whenUnsatisfiable: ScheduleAnyway
-            - labelSelector:
-                matchLabels:
-                  app.kubernetes.io/component: keycloak
-              maxSkew: 1
-              topologyKey: kubernetes.io/hostname
-              whenUnsatisfiable: ScheduleAnyway
-          chart: bitnamicharts/keycloak
+#          postgresql:
+#            enabled: true
+        httpEnabled: true
+        resources:
+          limits:
+            cpu: 400m
+            memory: 1140Mi
+          requests:
+            cpu: 20m
+            memory: 570Mi
+        revisionHistoryLimitCount: 0
+        spi:
+          hostnameVerificationPolicy: STRICT
+        topologySpreadConstraints:
+          - labelSelector:
+            matchLabels:
+              app.kubernetes.io/component: keycloak
+            maxSkew: 1
+            topologyKey: topology.kubernetes.io/zone
+            whenUnsatisfiable: ScheduleAnyway
+          - labelSelector:
+            matchLabels:
+              app.kubernetes.io/component: keycloak
+            maxSkew: 1
+            topologyKey: kubernetes.io/hostname
+            whenUnsatisfiable: ScheduleAnyway
+        chart: bitnamicharts/keycloak
 
   destination:
     server: https://kubernetes.default.svc
