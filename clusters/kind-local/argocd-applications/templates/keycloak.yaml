@@ -32,6 +32,10 @@ spec:
             value: mssql
           - name: KC_DB_URL
             value: "jdbc:sqlserver://host.rancher-desktop.internal:1433;databaseName=bitnami_keycloak;encrypt=false;trustServerCertificate=true;"
+          - name: KC_DB_USERNAME
+            value: sa
+          - name: KC_DB_PASSWORD
+            value: YourStrong@Password123
           - name: KC_PROXY
             value: edge
           - name: KC_HOSTNAME
