@@ -15,36 +15,35 @@ spec:
       # https://github.com/codecentric/helm-charts/blob/master/charts/keycloakx/values.yaml
       valuesObject:
         replicas: 1
-        # doesn't have revisionHistoryLimitCount: 0
-
         command:
           - "/opt/keycloak/bin/kc.sh"
           - "-v"
           - "start"
-          - "--hostname=authx.local.dev"
-          - "--hostname-port=80"
-          -
+          - "--hostname=localhost"
+        # doesn't have revisionHistoryLimitCount: 0
+
+        # Use environment variables instead
         #for test
-        extraContainers: |
-          - name: postgres-test
-            image: bitnamilegacy/postgresql
-            imagePullPolicy: IfNotPresent
-            env:
-              - name: POSTGRES_DB
-                value: keycloak
-              - name: POSTGRES_USER
-                value: postgres
-              - name: POSTGRES_PASSWORD
-                value: strongpass
-            ports:
-              - containerPort: 5432
-                name: postgres      
+#        extraContainers: |
+#          - name: postgres-test
+#            image: bitnamilegacy/postgresql
+#            imagePullPolicy: IfNotPresent
+#            env:
+#              - name: POSTGRES_DB
+#                value: keycloak
+#              - name: POSTGRES_USER
+#                value: postgres
+#              - name: POSTGRES_PASSWORD
+#                value: strongpass
+#            ports:
+#              - containerPort: 5432
+#                name: postgres
 
         extraEnv: |
           - name: PROXY_ADDRESS_FORWARDING
             value: "true"
           - name: KC_HTTP_ENABLED
-            value: "true" 
+            value: "true"
           - name: KC_CACHE
             value: local
           - name: KC_BOOTSTRAP_ADMIN_USERNAME
@@ -52,38 +51,21 @@ spec:
           - name: KC_BOOTSTRAP_ADMIN_PASSWORD
             value: adminpassword
           - name: KC_DB_URL
-            value: jdbc:postgresql://localhost:5432/keycloak
+            value: "jdbc:sqlserver://mssql.mssql.svc.cluster.local:1433;databaseName=codecentric_keycloakx;encrypt=false;trustServerCertificate=true;"
           - name: KC_DB_USERNAME
-            value: postgres
+            value: sa
           - name: KC_DB
-            value: postgres
+            value: mssql
           - name: KC_DB_PASSWORD
-            value: strongpass
-        #          - name: DB_USERNAME
-        #            valueFrom:
-        #              secretKeyRef:
-        #                name: keycloakx-mssql-db-credentials
-        #                key: username
+            value: YourStrong@Password123
+        #          - name: KC_DB_URL
+        #            value: jdbc:postgresql://localhost:5432/keycloak
+        #          - name: KC_DB_USERNAME
+        #            value: postgres
+        #          - name: KC_DB
+        #            value: postgres
         #          - name: KC_DB_PASSWORD
-        #            valueFrom:
-        #              secretKeyRef:
-        #                name: keycloakx-mssql-db-credentials
-        #                key: password
-        #          - name: DB_HOST_NAME
-        #            valueFrom:
-        #              secretKeyRef:
-        #                name: keycloakx-mssql-db-credentials
-        #                key: hostname
-        #          - name: DB_URL_PORT
-        #            valueFrom:
-        #              secretKeyRef:
-        #                name: keycloakx-mssql-db-credentials
-        #                key: port
-        #          - name: DB_URL_DATABASE
-        #            valueFrom:
-        #              secretKeyRef:
-        #                name: keycloakx-mssql-db-credentials
-        #                key: database
+        #            value: strongpass
 
 #        ingress:
 #          enabled: true
@@ -128,6 +110,3 @@ spec:
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
-    automated:
-      prune: true
-      selfHeal: true

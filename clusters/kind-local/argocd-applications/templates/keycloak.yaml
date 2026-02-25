@@ -22,7 +22,7 @@ spec:
           relativePath: /
         image:
           registry: docker.io
-          repository: bitnami/keycloak
+          repository: bitnamilegacy/keycloak
           tag: 26.3.2-debian-12-r0
         ingress:
           enabled: false
@@ -31,7 +31,7 @@ spec:
           - name: KC_DB
             value: mssql
           - name: KC_DB_URL
-            value: "jdbc:sqlserver://host.rancher-desktop.internal:1433;databaseName=bitnami_keycloak;encrypt=false;trustServerCertificate=true;"
+            value: "jdbc:sqlserver://mssql.mssql.svc.cluster.local:1433;databaseName=bitnami_keycloak;encrypt=false;trustServerCertificate=true;"
           - name: KC_DB_USERNAME
             value: sa
           - name: KC_DB_PASSWORD
@@ -39,13 +39,13 @@ spec:
           - name: KC_PROXY
             value: edge
           - name: KC_HOSTNAME
-            value: auth.local.dev
+            value: localhost
           - name: KC_HOSTNAME_PORT # needed so Keycloak generates correct external URLs when behind an ingress proxy, else it will forward to https and strip port from url
             value: "80"
         replicaCount: 1
         externalDatabase:
           database: bitnami_keycloak
-          host: host.rancher-desktop.internal
+          host: mssql.mssql.svc.cluster.local
           password: YourStrong@Password123
           port: 1433
           user: sa
@@ -88,6 +88,3 @@ spec:
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
-    automated:
-      prune: true
-      selfHeal: true
